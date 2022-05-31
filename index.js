@@ -43,7 +43,7 @@ app.post('/sms-status-callback', (req, res) => {
   if (smsStatus === 'delivered') {
     // Get metadata from the query string
     // Send it to a database, do whatever you gotta do!
-    console.log('Metadata from delievered SMS: ', req.query);
+    console.log('Metadata from delivered SMS: ', req.query);
   }
 });
 
