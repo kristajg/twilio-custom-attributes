@@ -23,8 +23,8 @@ let dynamicCampaignVariable = 22;
 twilioClient.messages.create({
   to: process.env.MY_PHONE_NUMBER,
   from: process.env.TWILIO_PHONE_NUMBER,
-  body: 'Super cool text for a super cool campaign',
-  statusCallback: `https://YOUR_NGROK_URL_GOES_HERE.ngrok.io/sms-status-callback?campaign_id=${dynamicCampaignVariable}`,
+  body: 'Super cool promotion text for a super cool SMS campaign',
+  statusCallback: `https://${process.env.NGROK_HTTPS_URL}/sms-status-callback?campaign_id=${dynamicCampaignVariable}`,
 })
 .then(message => {
   console.log('Message sent: ', message);
@@ -36,13 +36,15 @@ twilioClient.messages.create({
 
 // StatusCallback endpoint
 app.post('/sms-status-callback', (req, res) => {
-  console.log('statusCallback hit. SMS status: ', req.body.SmsStatus);
+  const smsStatus = req.body.SmsStatus.toLowerCase();
+  console.log('SMS statusCallback endpoint hit. Status: ', smsStatus);
 
-  // Get metadata from the query string
-  console.log('Metadata: ', req.query);
-
-  // Send it to a database, do whatever you gotta do!
-  let statusCallbackData = req.query;
+  // If the status is 'delivered' log the data, log the data
+  if (smsStatus === 'delivered') {
+    // Get metadata from the query string
+    // Send it to a database, do whatever you gotta do!
+    console.log('Metadata from delievered SMS: ', req.query);
+  }
 });
 
 app.get('/', (req, res) => {
